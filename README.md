@@ -5,6 +5,8 @@
 ![SQL](https://img.shields.io/badge/SQL-PostgreSQL-336791?logo=postgresql&logoColor=white)
 ![Techniques](https://img.shields.io/badge/Techniques-Joins%20·%20CTEs%20·%20Window%20Functions-555)
 
+![Pizza sales overview](images/sales_overview.png)
+
 ---
 
 ## 📌 Key findings
@@ -79,6 +81,9 @@ pizza_sales_SQL/
 │   ├── 01_basic_metrics.sql
 │   ├── 02_intermediate_analysis.sql
 │   └── 03_advanced_analysis.sql
+├── src/
+│   └── make_charts.py              # regenerates the README chart
+├── images/
 ├── presentation/
 │   └── pizza_sales_presentation.pdf # slide summary of findings
 └── README.md
