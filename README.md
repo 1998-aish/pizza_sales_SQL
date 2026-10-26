@@ -1,46 +1,92 @@
+# 🍕 Pizza Sales Analysis — SQL
+
+**A full year of transactions from a pizza restaurant (21,350 orders, $817.9K revenue), analyzed in PostgreSQL to find what drives revenue and when demand peaks.**
+
+![SQL](https://img.shields.io/badge/SQL-PostgreSQL-336791?logo=postgresql&logoColor=white)
+![Techniques](https://img.shields.io/badge/Techniques-Joins%20·%20CTEs%20·%20Window%20Functions-555)
 
 ---
 
-# 🍕 Pizza Sales Data Analysis – SQL Project
+## 📌 Key findings
 
-## 📊 Project Overview
+| Metric | Value |
+|---|---|
+| Total orders (2015) | **21,350** |
+| Total revenue | **$817,860** |
+| Average order value | **$38.31** |
+| Pizzas per order | **2.3** |
+| Pizzas sold per day | **138.5** on average |
 
-This project focuses on analyzing **pizza sales data** from a fictional restaurant to uncover meaningful **business insights** that can drive data-informed decisions. Using **SQL** as the primary tool, the analysis dives deep into sales performance across different dimensions such as time, product categories, and customer behavior.
-
-The goal is to help stakeholders — such as restaurant owners, managers, and marketers — understand trends that can influence **operations, marketing strategies, and inventory planning**. By writing optimized and modular SQL queries, I extract and visualize insights that can improve overall efficiency and profitability.
-
----
-
-## 🧩 Key Objectives
-
-* Analyze **daily, weekly, and monthly revenue trends**
-* Identify **top-selling pizzas** by volume and revenue
-* Explore **order frequency patterns** by time of day and day of the week
-* Evaluate the performance of different **pizza categories** (e.g., Classic, Chicken, Veggie)
-* Determine **peak sales periods** and **underperforming time windows**
-* Assess **average order value** and **number of pizzas per order**
-
----
-
-## 🧰 Tools Used
-
-* **SQL** (PostgreSQL): Querying and aggregating data
-* **pgAdmin**: Query execution and data exploration
-* **Excel** / **Tableau** (optional): For visualizing the final results and creating dashboards
+1. **Two daily rush windows.** Orders peak at lunch (12–1 PM, ~2,500 orders per hour-slot over the year) and again at dinner (5–7 PM). Mid-afternoon (2–3 PM) runs at roughly 60% of peak — the natural window for staff breaks, prep, or a happy-hour promotion.
+2. **Friday is the busiest day; Sunday is the slowest.** Friday sees 35% more orders than Sunday (3,538 vs 2,624), so Sunday is the strongest candidate for a targeted promotion.
+3. **Chicken pizzas earn the most per pizza.** The top 3 revenue earners are all chicken pizzas (Thai, Barbecue, California), even though the Chicken category sells the fewest units — higher prices make up the difference.
+4. **Revenue is evenly spread across categories.** Classic (26.9%), Supreme (25.5%), Chicken (24.0%) and Veggie (23.7%) are all close, so the menu isn't dependent on any single category.
+5. **XL and XXL sizes barely sell.** Large is the most popular size; XL and XXL together are just 1.2% of pizzas sold — a case for simplifying the size menu.
+6. **Underperformers to review:** The Brie Carre, Green Garden and Spinach Supreme pizzas are the three lowest revenue earners (each under 2% of revenue).
+7. **Demand is steady year-round.** Monthly revenue stays between $64K and $73K, with no strong seasonal swing.
 
 ---
 
-## 🔍 Business Insights Generated
+## 🧩 Questions answered
 
-* The **best-selling pizza types** by quantity and revenue
-* Sales **peaks during weekends and evening hours**
-* Certain pizza categories like **"Classic" and "Chicken"** drive the highest revenue
-* Opportunities to **optimize staffing** during rush hours and promote slower periods
-* **Seasonal demand shifts** and potential marketing campaign ideas based on calendar trends
+| Level | Questions | File |
+|---|---|---|
+| Basic | Total orders, total revenue, highest-priced pizza, most common size, top 5 pizzas by quantity | [`01_basic_metrics.sql`](sql/01_basic_metrics.sql) |
+| Intermediate | Quantity by category, orders by hour and weekday, average pizzas per day, top 3 by revenue | [`02_intermediate_analysis.sql`](sql/02_intermediate_analysis.sql) |
+| Advanced | Revenue share by pizza and category, cumulative revenue over time, top 3 pizzas per category | [`03_advanced_analysis.sql`](sql/03_advanced_analysis.sql) |
+
+SQL techniques used: multi-table joins, aggregation, CTEs, window functions (`SUM() OVER`, `RANK() OVER (PARTITION BY …)`), and date/time extraction.
 
 ---
 
-## 💡 Why This Project?
+## 🗂 Data model
 
-This project demonstrates practical skills in **data cleaning, aggregation, time-based analysis, and business intelligence using SQL**. It's a great example of turning raw transactional data into actionable insights that a real-world business can apply to grow and operate more efficiently.
+Four related tables:
 
+```
+orders (order_id, order_date, order_time)
+   └── order_details (order_details_id, order_id, pizza_id, quantity)
+          └── pizzas (pizza_id, pizza_type_id, size, price)
+                 └── pizza_types (pizza_type_id, name, category, ingredients)
+```
+
+---
+
+## ▶️ How to run
+
+```bash
+git clone https://github.com/1998-aish/pizza_sales_SQL.git
+cd pizza_sales_SQL
+unzip data/pizza_sales.zip -d data/
+
+createdb pizza_sales
+psql -d pizza_sales -f sql/00_schema.sql          # creates tables and loads the CSVs
+psql -d pizza_sales -f sql/01_basic_metrics.sql
+psql -d pizza_sales -f sql/02_intermediate_analysis.sql
+psql -d pizza_sales -f sql/03_advanced_analysis.sql
+```
+
+---
+
+## 📁 Repository structure
+
+```
+pizza_sales_SQL/
+├── data/
+│   └── pizza_sales.zip              # raw CSVs
+├── sql/
+│   ├── 00_schema.sql                # schema + data load
+│   ├── 01_basic_metrics.sql
+│   ├── 02_intermediate_analysis.sql
+│   └── 03_advanced_analysis.sql
+├── presentation/
+│   └── pizza_sales_presentation.pdf # slide summary of findings
+└── README.md
+```
+
+---
+
+## 👩‍💻 Author
+
+**Aishwarya Srivastava** — M.S. Data Science & Analytics, Arizona State University
+[LinkedIn](https://www.linkedin.com/in/aish-sv123) · [GitHub](https://github.com/1998-aish)
